@@ -121,13 +121,13 @@ export default function ReflectScreen({ game, life, name, onRebornAgain, onResta
 
         <div className="actions">
           <button className="btn btn--ink btn--wide" onClick={onRebornAgain}>
-            🎰 같은 지구에서 한 번 더 태어나기
+            같은 지구에서 한 번 더 태어나기
           </button>
           <button className="btn btn--paper btn--wide" onClick={onRestart}>
-            📄 새 임명장 받기
+            새 임명장 받기
           </button>
           <button className="btn btn--paper btn--wide" onClick={share}>
-            {copied ? '✅ 결과를 복사했어요!' : '📋 결과 복사해서 자랑하기'}
+            {copied ? '결과를 복사했어요' : '결과 복사해서 공유하기'}
           </button>
         </div>
       </aside>

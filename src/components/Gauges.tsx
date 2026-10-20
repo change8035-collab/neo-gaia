@@ -15,9 +15,9 @@ function Dial({ value }: { value: number }) {
   const angle = -90 + (value / 100) * 180
   return (
     <svg viewBox="0 0 120 72" className="dial" aria-hidden>
-      <path d="M12 64 A48 48 0 0 1 108 64" fill="none" stroke="#efe6cf" strokeWidth="12" />
-      <path d="M12 64 A48 48 0 0 1 25.9 30.1" fill="none" stroke="#e0533f" strokeWidth="12" />
-      <path d="M94.1 30.1 A48 48 0 0 1 108 64" fill="none" stroke="#e6c34a" strokeWidth="12" opacity="0.5" />
+      <path d="M12 64 A48 48 0 0 1 108 64" fill="none" stroke="#f6f0e1" strokeWidth="12" />
+      <path d="M12 64 A48 48 0 0 1 25.9 30.1" fill="none" stroke="#c43a2f" strokeWidth="12" />
+      <path d="M94.1 30.1 A48 48 0 0 1 108 64" fill="none" stroke="#2a5bb5" strokeWidth="12" opacity="0.35" />
       {Array.from({ length: 11 }).map((_, i) => {
         const a = ((-180 + i * 18) * Math.PI) / 180
         return (
@@ -34,7 +34,7 @@ function Dial({ value }: { value: number }) {
       })}
       <path d="M12 64 A48 48 0 0 1 108 64" fill="none" stroke="#1d1b18" strokeWidth="2" />
       <g className="needle" style={{ transform: `rotate(${angle}deg)` }}>
-        <path d="M58.5 64 L60 22 L61.5 64 Z" fill="#c8322a" stroke="#1d1b18" strokeWidth="1" />
+        <path d="M58.5 64 L60 22 L61.5 64 Z" fill="#c43a2f" stroke="#1f1c18" strokeWidth="1" />
       </g>
       <circle cx="60" cy="64" r="6" fill="#1d1b18" />
     </svg>

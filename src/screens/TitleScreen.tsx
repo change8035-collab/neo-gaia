@@ -76,7 +76,7 @@ export default function TitleScreen({ onStart }: { onStart: (name: string) => vo
             </p>
           </div>
           {seen.endings.length > 0 && (
-            <p className="title-desk__record px">
+            <p className="title-desk__record">
               엔딩 {seen.endings.length}/{ENDING_IDS.length} · 삶 {seen.lives.length}/{LIVES.length}
             </p>
           )}

@@ -22,11 +22,20 @@ interface Props {
 
 const TITLES: Record<Card['kind'], string> = {
   normal: '민 원 서',
-  followup: '재접수 민원',
-  sideEffect: '부작용 보고서',
-  protest: '집 단 민 원',
-  gaia: '극비 · 내부 연산 보고',
-  finale: '대표 회의 안건지',
+  followup: '민 원 서',
+  sideEffect: '민 원 서',
+  protest: '민 원 서',
+  gaia: '내부 연산 보고',
+  finale: '안 건 지',
+}
+
+/** 서류 종류는 종이 모양 대신 작은 빨간 표시 하나로 구분 */
+const TAGS: Partial<Record<Card['kind'], string>> = {
+  followup: '재접수',
+  sideEffect: '부작용 보고',
+  protest: '집단 민원',
+  gaia: '극비',
+  finale: '최종 안건',
 }
 
 /** 예상 효과를 타자기 글씨로 */
@@ -72,22 +81,19 @@ export default function Petition(props: Props) {
   const mood = speakerMood(card, game)
   const lines = cardLines(card, game)
   const isGaia = card.kind === 'gaia'
-  const tilt = ((number * 37) % 5) - 2
   const canPeek = !stamped && !peeked && !isGaia && card.kind !== 'finale'
   // 글이 길면 글씨를 조금 줄여서 한 화면에 들어가게
   const textLength = lines.join(' ').length
   const lengthClass = textLength > 105 ? 'xlong' : textLength > 72 ? 'long' : ''
 
   return (
-    <article
-      className={`doc doc--${card.kind} ${leaving ? (stamped?.approved ? 'doc--out-right' : 'doc--out-left') : ''}`}
-      style={{ ['--tilt' as string]: `${tilt * 0.6}deg` }}
-    >
+    <article className={`doc doc--${card.kind} ${leaving ? (stamped?.approved ? 'doc--out-right' : 'doc--out-left') : ''}`}>
       <header className="doc__head">
         <span>No. {String(number).padStart(3, '0')}</span>
         <span>접수 · 임기 {year}년차</span>
       </header>
       <h2 className="doc__title">{TITLES[card.kind]}</h2>
+      {TAGS[card.kind] && <span className="doc__tag">{TAGS[card.kind]}</span>}
 
       <div className="doc__who">
         <div className="photo">
@@ -156,7 +162,7 @@ export default function Petition(props: Props) {
         </button>
       )}
       {peeked && !stamped && (
-        <div className="analysis px">
+        <div className="analysis">
           <b>[영향 분석서]</b>
           <p>
             {approveLabel}: <Effects choice={card.approve} card={card} approved />

@@ -14,7 +14,8 @@ interface Props {
 
 type GachaStage = 'machine' | 'turning' | 'capsule' | 'opened'
 
-const CAPSULE_COLORS = ['#e8553f', '#3e7bd1', '#f2c33a', '#4fae6b', '#c46bd1', '#f08aa8', '#46b6c4']
+// 캡슐 색도 디자인 규칙의 색 안에서만
+const CAPSULE_COLORS = ['#c43a2f', '#2a5bb5', '#f7e07c', '#6e6557', '#ded5c2', '#a6f3b6', '#9a6a44']
 
 // 원작 『일인용 캡슐』에서 따온 환생 캡슐 뽑기 → 내 삶 3컷 만화
 export default function RebirthScreen({ game, life, onDone }: Props) {
@@ -77,7 +78,7 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
     <Stage>
     <main className={`screen desk rebirth-desk ${stage === 'opened' ? 'rebirth-desk--opened' : 'rebirth-desk--waiting'}`}>
       <section className={`gacha gacha--${stage}`}>
-        <p className="gacha__sign px">환생 캡슐 · 1인 1회</p>
+        <p className="gacha__sign">환생 캡슐 · 1인 1회</p>
         <div className="gacha__dome">
           {LIVES.map((l, i) => (
             <span
@@ -141,10 +142,10 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
                         <span className="panel__hero">{life.life.emoji}</span>
                         {s.score < 0 && <span className="panel__weather rain" />}
                         {s.score > 0 && <span className="panel__weather sun" />}
-                        <span className="panel__no px">{i + 1}</span>
+                        <span className="panel__no">{i + 1}</span>
                       </>
                     ) : (
-                      <span className="panel__blank px">{i + 1}</span>
+                      <span className="panel__blank">{i + 1}</span>
                     )}
                   </div>
                   {i < shown && (
@@ -167,7 +168,7 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
               <br />
               이제 당신은 당신이 만든 지구의 구성원 중 하나로 다시 태어납니다.
             </p>
-            <p className="px">인간일 수도, 펭귄일 수도, 강물고기일 수도 있습니다.</p>
+            <p className="rebirth__note">인간일 수도, 펭귄일 수도, 강물고기일 수도 있습니다.</p>
             <button className="btn btn--ink" onClick={advance} disabled={stage === 'turning'}>
               {stage === 'capsule' ? '캡슐 열기 ▶' : '손잡이 돌리기 ▶'}
             </button>
