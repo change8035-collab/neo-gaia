@@ -1621,7 +1621,11 @@ input {
 }
 
 .gacha--turning .capsule--mini {
-  animation: jiggle 0.18s ease-in-out infinite alternate;
+  animation: settle 0.45s ease-in-out 2 alternate;
+}
+
+.gacha--turning .capsule--mini:nth-child(even) {
+  animation-delay: 0.12s;
 }
 
 .gacha__body {
@@ -1658,12 +1662,12 @@ input {
   border-radius: 8px;
 }
 
-.gacha--machine .gacha__crank {
-  animation: nudge 1.6s ease-in-out infinite;
+.gacha__crank:hover:not(:disabled) {
+  background: #fbe9a0;
 }
 
 .gacha--turning .gacha__crank {
-  animation: crank 1.2s ease-in-out both;
+  animation: crank 0.8s ease-in-out both;
 }
 
 .gacha__chute {
@@ -1687,9 +1691,7 @@ input {
   border: none;
   background: none;
   cursor: pointer;
-  animation:
-    drop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) both,
-    wobble 0.9s 0.6s ease-in-out infinite;
+  animation: drop 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) both;
 }
 
 .capsule__top,
@@ -2556,32 +2558,15 @@ input {
   }
 }
 
-@keyframes jiggle {
-  from {
-    transform: translate(-3px, 2px) rotate(-8deg);
-  }
+@keyframes settle {
   to {
-    transform: translate(3px, -3px) rotate(8deg);
+    transform: translateY(-6px);
   }
 }
 
 @keyframes crank {
   to {
-    transform: rotate(720deg);
-  }
-}
-
-@keyframes nudge {
-  0%,
-  70%,
-  100% {
-    transform: rotate(0);
-  }
-  80% {
-    transform: rotate(-25deg);
-  }
-  90% {
-    transform: rotate(10deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -2589,12 +2574,6 @@ input {
   from {
     transform: translateY(-120px) scale(0.5);
     opacity: 0;
-  }
-}
-
-@keyframes wobble {
-  50% {
-    transform: rotate(8deg) scale(1.05);
   }
 }
 

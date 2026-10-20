@@ -37,7 +37,7 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
     release()
     sfx.crank()
     setStage('turning')
-    timers.current.push(window.setTimeout(() => setStage('capsule'), 1300))
+    timers.current.push(window.setTimeout(() => setStage('capsule'), 900))
   }
 
   const open = () => {
