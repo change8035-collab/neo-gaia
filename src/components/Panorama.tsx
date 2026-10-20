@@ -33,6 +33,19 @@ const ZONE_LABEL: Record<ZoneId, string> = {
 const mix = (a: number, b: number, t: number) => a + (b - a) * t
 const hsl = (h: number, s: number, l: number, a = 1) => `hsl(${h} ${s}% ${l}% / ${a})`
 
+/** 생애 사진 한 장: 주인공을 어디에 세우고 얼마나 넓게 찍을지 */
+export interface PhotoShot {
+  emoji: string
+  /** 주인공 크기 (클수록 나이가 많음) */
+  size: number
+  /** 주인공이 선 가로 위치 (풍경 좌표) */
+  x: number
+  /** 땅 위 / 빙하 위 / 강물 속 / 건물 난간 */
+  anchor: 'ground' | 'ice' | 'river' | 'ledge'
+  /** 사진에 담을 가로 폭 (작을수록 가까이 찍음) */
+  w: number
+}
+
 interface Props {
   game: GameState
   highlight?: ZoneId | 'all' | null
@@ -42,6 +55,8 @@ interface Props {
   zoom?: number
   /** 도장을 찍은 순간 영향받은 지역을 번쩍이게 */
   flash?: { zone: ZoneId | 'all'; good: boolean; text: string; id: number } | null
+  /** 생애 사진으로 찍을 때 */
+  photo?: PhotoShot
   className?: string
 }
 
@@ -234,7 +249,7 @@ function Protester({ x, y, word }: { x: number; y: number; word: string }) {
 
 /* ───────── 전체 풍경 ───────── */
 
-export default function Panorama({ game, highlight, crop, zoom = 0, flash, className = '' }: Props) {
+export default function Panorama({ game, highlight, crop, zoom = 0, flash, photo, className = '' }: Props) {
   const has = (f: string) => game.flags.includes(f)
   const zones = Object.fromEntries(zoneViews(game).map((z) => [z.id, z]))
   const earth = game.stats.earth
@@ -265,9 +280,32 @@ export default function Panorama({ game, highlight, crop, zoom = 0, flash, class
   const burntTrees = woods < 30 ? 3 : woods < 40 ? 2 : woods < 50 ? 1 : 0
   const protest = !gaia && (game.trust.citizen <= 30 || human < 30)
 
-  const viewBox = crop
-    ? `${ZONE_X[crop][0] + zoom * 12} ${120 + zoom * 16} ${200 - zoom * 24} ${220 - zoom * 26}`
-    : `0 ${TOP} ${W} ${H - TOP}`
+  // 생애 사진: 주인공이 선 자리를 기준으로 4:3 구도로 잘라 찍음
+  const figY = photo
+    ? photo.anchor === 'ice'
+      ? seaTop - 28
+      : photo.anchor === 'river'
+        ? 312
+        : photo.anchor === 'ledge'
+          ? GROUND - 110
+          : GROUND + 16
+    : 0
+  const figX = photo ? (photo.anchor === 'ice' ? Math.min(photo.x, iceW - 16) : photo.x) : 0
+  const shot = photo
+    ? (() => {
+        const w = photo.w
+        const h = w * 0.75
+        const x = Math.max(0, Math.min(W - w, figX - w / 2))
+        const y = Math.max(0, Math.min(H - h, figY - photo.size * 0.4 - h * 0.55))
+        return `${x.toFixed(1)} ${y.toFixed(1)} ${w} ${h}`
+      })()
+    : null
+
+  const viewBox = shot
+    ? shot
+    : crop
+      ? `${ZONE_X[crop][0] + zoom * 12} ${120 + zoom * 16} ${200 - zoom * 24} ${220 - zoom * 26}`
+      : `0 ${TOP} ${W} ${H - TOP}`
 
   return (
     <svg
@@ -661,6 +699,25 @@ export default function Panorama({ game, highlight, crop, zoom = 0, flash, class
       )}
 
       {/* 스모그 */}
+      {/* 생애 사진 속 주인공 */}
+      {photo && (
+        <g>
+          {photo.anchor !== 'river' && (
+            <ellipse cx={figX} cy={figY + 2} rx={photo.size * 0.36} ry={photo.size * 0.09} fill="#000" opacity="0.28" />
+          )}
+          <text
+            x={figX}
+            y={figY}
+            fontSize={photo.size}
+            textAnchor="middle"
+            style={{ fontFamily: 'system-ui, sans-serif' }}
+            opacity={photo.anchor === 'river' ? 0.85 : 1}
+          >
+            {photo.emoji}
+          </text>
+        </g>
+      )}
+
       {(smog || burn > 0) && !gaia && (
         <rect x="0" y="0" width={W} height={GROUND} fill="#7a4a24" opacity={0.1 + burn * 0.32 + (has('factory_boom') ? 0.1 : 0)} />
       )}
@@ -681,6 +738,7 @@ export default function Panorama({ game, highlight, crop, zoom = 0, flash, class
 
       {/* 지역 강조 */}
       {!crop &&
+        !photo &&
         (Object.keys(ZONE_X) as ZoneId[]).map((id) => {
           const [x0, x1] = ZONE_X[id]
           const lit = highlight === id
@@ -726,7 +784,7 @@ export default function Panorama({ game, highlight, crop, zoom = 0, flash, class
           )
         })}
       {highlight === 'all' && <rect x="0" y="0" width={W} height={H} fill="#ff2040" className="alarm-tint" />}
-      {flash && !crop && (
+      {flash && !crop && !photo && (
         <g key={flash.id}>
           {(() => {
             const [x0, x1] = flash.zone === 'all' ? [0, W] : ZONE_X[flash.zone]
