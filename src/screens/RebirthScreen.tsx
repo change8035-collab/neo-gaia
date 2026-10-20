@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import GachaMachine from '../components/GachaMachine.tsx'
 import type { GachaPhase } from '../components/GachaMachine.tsx'
-import Panorama from '../components/Panorama.tsx'
-import type { PhotoShot } from '../components/Panorama.tsx'
 import Stage from '../components/Stage.tsx'
 import { LIVES } from '../data/lives.ts'
 import { markLife } from '../game/collection.ts'
@@ -20,36 +18,19 @@ interface Props {
 const CAPSULE_COLORS = ['#c43a2f', '#2a5bb5', '#f7e07c', '#6e6557', '#ded5c2', '#a6f3b6', '#9a6a44']
 const TURN_MS = 1400
 
-// 생애 사진 세 장: 주인공이 서는 자리와 나이 (클수록 몸이 커지고, 사진마다 구도가 조금씩 다름)
-const SHOTS: Record<string, { anchor: PhotoShot['anchor']; x: number; ages: string[]; sizes: number[] }> = {
-  worker_kid: { anchor: 'ground', x: 905, ages: ['만 7세', '만 16세', '만 35세'], sizes: [38, 46, 54] },
-  coast_kid: { anchor: 'ground', x: 352, ages: ['만 6세', '만 15세', '만 32세'], sizes: [38, 46, 54] },
-  farm_kid: { anchor: 'ground', x: 458, ages: ['만 8세', '만 17세', '만 38세'], sizes: [38, 46, 54] },
-  deer: { anchor: 'ground', x: 690, ages: ['1살', '3살', '9살'], sizes: [34, 42, 50] },
-  penguin: { anchor: 'ice', x: 70, ages: ['1살', '4살', '15살'], sizes: [30, 38, 44] },
-  fish: { anchor: 'river', x: 905, ages: ['1살', '2살', '5살'], sizes: [24, 28, 32] },
-  sparrow: { anchor: 'ledge', x: 1031, ages: ['1살', '2살', '4살'], sizes: [22, 26, 30] },
-}
-const FRAME_W = [150, 178, 205]
-const SHIFT = [-16, 0, 20]
-
 const mood = (score: number) =>
   score > 0 ? { label: '좋음', cls: 'ok' } : score < 0 ? { label: '힘듦', cls: 'no' } : { label: '보통', cls: 'mid' }
 
 // 원작 『일인용 캡슐』에서 따온 환생 캡슐 뽑기 → 생애 기록부
-// 개발할 때만: ?ruin=album 이면 사진을 다 펼친 상태로 시작 (그림 확인용)
-const DEV_ALBUM = import.meta.env.DEV && new URLSearchParams(location.search).get('ruin') === 'album'
-
 export default function RebirthScreen({ game, life, onDone }: Props) {
-  const [phase, setPhase] = useState<GachaPhase>(DEV_ALBUM ? 'opened' : 'ready')
-  const [shown, setShown] = useState(DEV_ALBUM ? 3 : 0)
-  const [judged, setJudged] = useState(DEV_ALBUM)
+  const [phase, setPhase] = useState<GachaPhase>('ready')
+  const [shown, setShown] = useState(0)
+  const [judged, setJudged] = useState(false)
   const timers = useRef<number[]>([])
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms))
   useEffect(() => () => timers.current.forEach(clearTimeout), [])
 
   useEffect(() => {
-    if (DEV_ALBUM) return
     setPhase('ready')
     setShown(0)
     setJudged(false)
@@ -119,7 +100,7 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
     opened: `${gaia ? '사람이 거의 사라진 ' : '당신이 만든 '}지구에서 태어났습니다`,
   }[phase]
 
-  const recordButton = shown < total ? (shown === 0 ? '첫 사진 보기 ▶' : '다음 사진 ▶') : judged ? '내 결정 돌아보기 ▶' : '삶 판정 받기 ▶'
+  const recordButton = shown < total ? (shown === 0 ? '기록 읽기 ▶' : '다음 기록 ▶') : judged ? '내 결정 돌아보기 ▶' : '삶 판정 받기 ▶'
 
   return (
     <Stage>
@@ -160,42 +141,18 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
                   </dl>
                 </div>
 
-                <div className="album">
-                  {life.scenes.map((sc, i) => {
-                    const m = mood(sc.score)
-                    const def = SHOTS[life.life.id] ?? SHOTS.worker_kid
-                    const on = i < shown
+                <ol className="life-record__list">
+                  {life.scenes.map((s, i) => {
+                    const m = mood(s.score)
                     return (
-                      <figure key={sc.title} className={`snap snap--${m.cls} ${on ? 'is-shown' : ''}`}>
-                        <div className="snap__img">
-                          {on ? (
-                            <div className="snap__pic">
-                              <Panorama
-                                game={game}
-                                photo={{
-                                  emoji: life.life.emoji,
-                                  size: def.sizes[i],
-                                  x: def.x + SHIFT[i],
-                                  anchor: def.anchor,
-                                  w: FRAME_W[i],
-                                }}
-                              />
-                              {sc.score < 0 && <span className="snap__rain" />}
-                            </div>
-                          ) : (
-                            <span className="snap__blank">{i + 1}</span>
-                          )}
-                          {on && <span className="snap__date">{def.ages[i]}</span>}
-                          {on && <i className={`mini-stamp snap__stamp ${m.cls}`}>{m.label}</i>}
-                        </div>
-                        <figcaption>
-                          <b>{sc.title}</b>
-                          <span className="hand">{on ? sc.text : '아직 현상되지 않은 사진'}</span>
-                        </figcaption>
-                      </figure>
+                      <li key={s.title} className={i < shown ? 'is-shown' : ''}>
+                        <span className="life-record__age">{s.title}</span>
+                        <p className="hand">{i < shown ? s.text : ''}</p>
+                        {i < shown && <i className={`mini-stamp ${m.cls}`}>{m.label}</i>}
+                      </li>
                     )
                   })}
-                </div>
+                </ol>
 
                 <div className="doc__result">
                   <span>삶 판정</span>

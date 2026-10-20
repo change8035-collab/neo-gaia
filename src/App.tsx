@@ -15,8 +15,7 @@ type Screen = 'title' | 'play' | 'ending' | 'rebirth' | 'reflect'
 // ?ruin=ending / rebirth / reflect 면 그 화면으로 바로 감
 const PARAMS = new URLSearchParams(location.search)
 const RUIN = import.meta.env.DEV && PARAMS.has('ruin')
-const JUMP_RAW = RUIN ? PARAMS.get('ruin') : null
-const JUMP = (JUMP_RAW === 'album' ? 'rebirth' : (JUMP_RAW as Screen)) || null
+const JUMP = (RUIN && (PARAMS.get('ruin') as Screen)) || null
 
 function ruinedGame(): GameState {
   return {
@@ -30,12 +29,7 @@ function ruinedGame(): GameState {
 export default function App() {
   const [screen, setScreen] = useState<Screen>(RUIN ? (JUMP ?? 'play') : 'title')
   const [game, setGame] = useState<GameState>(() => (RUIN ? ruinedGame() : newGame()))
-  const [life, setLife] = useState<LifeResult | null>(() => {
-    if (!JUMP) return null
-    // 개발할 때 &life=penguin 처럼 생명체를 고를 수 있음
-    const pick = LIVES.filter((l) => l.id === PARAMS.get('life'))
-    return rebirth(ruinedGame(), pick.length ? pick : LIVES, Math.random)
-  })
+  const [life, setLife] = useState<LifeResult | null>(() => (JUMP ? rebirth(ruinedGame(), LIVES, Math.random) : null))
   const [name, setName] = useState(RUIN ? '테스트' : '')
   // 새 판을 시작할 때 PlayScreen 을 새로 만들기 위한 번호
   const [round, setRound] = useState(0)
