@@ -1,12 +1,12 @@
 # NEO GAIA
 
 <p align="center">
-  <a href="https://change8035-collab.github.io/neo-gaia/">
+  <a href="https://neo-gaia.netlify.app">
     <img src="https://img.shields.io/badge/%E2%96%B6%20%EC%A7%80%EA%B8%88%20%EB%B0%94%EB%A1%9C%20%ED%94%8C%EB%A0%88%EC%9D%B4-NEO%20GAIA-c8322a?style=for-the-badge" alt="지금 바로 플레이" height="48">
   </a>
 </p>
 
-<p align="center"><b>👉 <a href="https://change8035-collab.github.io/neo-gaia/">https://change8035-collab.github.io/neo-gaia/</a></b><br>위 버튼이나 주소를 누르면 설치 없이 브라우저에서 바로 게임이 시작돼요.</p>
+<p align="center"><b>👉 <a href="https://neo-gaia.netlify.app">neo-gaia.netlify.app</a></b><br>위 버튼이나 주소를 누르면 설치 없이 브라우저에서 바로 게임이 시작돼요.</p>
 
 
 원작 김소연 「가이아의 선택」(『일인용 캡슐』 수록)을 바탕으로 만든 웹 게임.
@@ -15,7 +15,8 @@
 
 ## 배포
 
-`main` 브랜치에 올리면 GitHub Actions 가 자동으로 다시 빌드해서 위 주소에 반영함.
+- 게임 주소: https://neo-gaia.netlify.app (Netlify) — 고친 뒤 `npm run deploy` 한 줄이면 다시 올라감
+- 예비 주소: https://change8035-collab.github.io/neo-gaia/ (GitHub Pages) — `main` 에 올리면 자동 반영
 
 ## 실행
 

@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "sim": "node --experimental-strip-types scripts/simulate.ts",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "deploy": "npm run build && npx netlify-cli deploy --prod --dir dist --site 4ad19525-868c-4b3b-9cea-c90103773500"
   },
   "dependencies": {
     "@fontsource/do-hyeon": "^5.3.0",
