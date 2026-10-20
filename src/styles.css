@@ -2134,7 +2134,7 @@ body {
   .app--ending,
   .app--rebirth,
   .app--reflect {
-    padding: 10px 10px 130px;
+    padding: 10px 10px 175px;
   }
 }
 
@@ -2473,7 +2473,7 @@ body {
   }
 
   .app {
-    padding-bottom: 130px;
+    padding-bottom: 175px;
   }
 
   .stamps {
@@ -2482,7 +2482,8 @@ body {
     right: 0;
     bottom: 0;
     z-index: 20;
-    padding: 6px 0 calc(8px + env(safe-area-inset-bottom));
+    /* 아래쪽 여백: 호스팅(Netlify)이 오른쪽 아래에 붙이는 표시와 겹치지 않게 */
+    padding: 6px 0 calc(52px + env(safe-area-inset-bottom));
     gap: 40px;
     background: rgba(40, 64, 51, 0.97);
     border-top: 3px solid var(--ink);
