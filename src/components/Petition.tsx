@@ -107,17 +107,9 @@ export default function Petition(props: Props) {
           </div>
           {card.faction && (
             <div>
-              <dt>소속</dt>
-              <dd>
-                {FACTION_INFO[card.faction].emoji} {FACTION_INFO[card.faction].label}
-              </dd>
-            </div>
-          )}
-          {card.faction && (
-            <div>
               <dt>민심</dt>
               <dd>
-                {mood.emoji} {mood.label.split(' ').slice(1).join(' ')}
+                {FACTION_INFO[card.faction].label} 쪽 · <span className={`mood mood--${mood.tone}`}>{mood.label}</span>
               </dd>
             </div>
           )}
@@ -135,6 +127,16 @@ export default function Petition(props: Props) {
           lines.map((l) => <p key={l}>{l}</p>)
         )}
       </div>
+
+      {card.evidence && (
+        <div className="evidence">
+          <span className="evidence__label">{isGaia ? '참고 데이터' : '첨부 · 실제 자료'}</span>
+          <p>{card.evidence.text}</p>
+          <a href={card.evidence.url} target="_blank" rel="noreferrer">
+            출처: {card.evidence.from}
+          </a>
+        </div>
+      )}
 
       <div className="doc__req">
         <span>{card.kind === 'finale' ? '안건' : '요청 정책'}</span>

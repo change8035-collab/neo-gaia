@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import Monitor from '../components/Monitor.tsx'
 import MuteButton from '../components/MuteButton.tsx'
+import Observed from '../components/Observed.tsx'
 import Stage from '../components/Stage.tsx'
 import StampFlight, { makeFlight, reducedMotion } from '../components/StampFlight.tsx'
 import type { Flight } from '../components/StampFlight.tsx'
@@ -64,11 +65,11 @@ export default function TitleScreen({ onStart }: { onStart: (name: string) => vo
           <div className="notes">
             <p className="sticky sticky--0">
               <b>① 민원 처리</b>
-              펭귄, 노동자, 꿀벌, 기업이 민원을 넣어요. 도장으로 승인 / 반려!
+              자연(동물·숲)과 인간(시민·기업)이 민원을 넣어요. 첨부된 실제 자료를 읽고 승인 / 반려!
             </p>
             <p className="sticky sticky--1">
               <b>② 계기판 지키기</b>
-              지구·인간·경제 중 하나라도 0이 되면 끝. 창밖 풍경도 바뀌어요.
+              지구·인간·경제 중 하나라도 0이 되면 끝. 창밖 기후대 풍경도 바뀌어요.
             </p>
             <p className="sticky sticky--2">
               <b>③ 그다음엔…</b>
@@ -140,6 +141,7 @@ export default function TitleScreen({ onStart }: { onStart: (name: string) => vo
             </button>
           </div>
           <p className="desk__hint">이름을 적고 도장을 쾅 찍으면 임기가 시작돼요</p>
+          <Observed />
           <MuteButton />
         </section>
       </div>
@@ -149,7 +151,7 @@ export default function TitleScreen({ onStart }: { onStart: (name: string) => vo
       )}
 
       <footer className="credit">
-        원작 김소연, 「가이아의 선택」 (『일인용 캡슐』 수록) · 게임 속 수치와 대사는 실제 예측이 아닌 가상 설정입니다
+        원작 김소연, 「가이아의 선택」 (『일인용 캡슐』 수록) · 계기판 수치와 대사는 가상 설정이고, 민원서의 ‘실제 자료’는 출처를 밝힌 실제 통계입니다
       </footer>
     </main>
     </Stage>

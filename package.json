@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "node scripts/fetch-observed.mjs && tsc --noEmit && vite build",
+    "observed": "node scripts/fetch-observed.mjs",
     "preview": "vite preview",
     "sim": "node --experimental-strip-types scripts/simulate.ts",
     "check": "tsc --noEmit",

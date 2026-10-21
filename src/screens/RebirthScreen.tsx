@@ -89,7 +89,8 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
 
   const capsuleColor = CAPSULE_COLORS[LIVES.findIndex((l) => l.id === life.life.id) % CAPSULE_COLORS.length]
   const gaia = game.flags.includes('gaia')
-  const place = zoneViews(game).find((z) => z.id === life.life.zone)?.name ?? ''
+  const zone = zoneViews(game).find((z) => z.id === life.life.zone)
+  const place = zone ? `${zone.name} (${zone.climate} 기후)` : ''
   const outcomeCls = life.outcome.label === '살 만한 삶' ? 'ok' : life.outcome.label === '힘겨운 삶' ? 'no' : 'mid'
 
   const hint = {
@@ -116,7 +117,7 @@ export default function RebirthScreen({ game, life, onDone }: Props) {
               <article className="doc life-record">
                 <header className="doc__head">
                   <span>생애 기록부</span>
-                  <span>{place} 출생</span>
+                  <span>{zone?.climate} 기후대 출생</span>
                 </header>
                 <h2 className="doc__title">생 애 기 록 부</h2>
 

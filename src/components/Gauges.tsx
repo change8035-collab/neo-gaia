@@ -60,9 +60,7 @@ export default function Gauges({ stats, deltas, preview, compact }: Props) {
               )}
             </div>
             <div className="gauge__label">
-              <span>
-                {STAT_INFO[key].emoji} {STAT_INFO[key].label}
-              </span>
+              <span>{STAT_INFO[key].label}</span>
               <b className="lcd">{String(value).padStart(3, '0')}</b>
             </div>
           </div>

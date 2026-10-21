@@ -13,6 +13,7 @@ import {
   yearsServed,
 } from '../game/engine.ts'
 import { sfx } from '../game/sound.ts'
+import { zoneViews } from '../game/zones.ts'
 import type { GameState } from '../game/types.ts'
 import Stage from '../components/Stage.tsx'
 
@@ -113,6 +114,19 @@ export default function EndingScreen({ game, name, onRebirth }: Props) {
           <Panorama game={game} highlight={ending.id === 'gaia' ? 'all' : null} />
           <figcaption className="hand">임기 마지막 날의 지구</figcaption>
         </figure>
+        <section className="climate-log">
+          <b>기후대별 마지막 모습</b>
+          <ul>
+            {zoneViews(game).map((z) => (
+              <li key={z.id} className={z.health < 35 ? 'bad' : z.health >= 60 ? 'good' : ''}>
+                <span>
+                  {z.climate} · {z.name}
+                </span>
+                <em>{z.status}</em>
+              </li>
+            ))}
+          </ul>
+        </section>
         <Gauges stats={game.stats} compact />
         <div className="handoff">
           <p>

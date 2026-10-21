@@ -12,19 +12,27 @@ export const STAT_INFO: Record<StatKey, { label: string; emoji: string }> = {
   economy: { label: '경제', emoji: '💰' },
 }
 
-/** 대표들이 속한 무리. 부탁을 들어주면 그 무리의 신뢰가 오르고, 거절하면 내려감 */
-export type Faction = 'nature' | 'citizen' | 'industry'
+/** 민심을 나누는 두 무리. 부탁을 들어주면 그 무리의 신뢰가 오르고, 거절하면 내려감 */
+export type Faction = 'nature' | 'human'
 
-export const FACTIONS: Faction[] = ['nature', 'citizen', 'industry']
+export const FACTIONS: Faction[] = ['nature', 'human']
 
-export const FACTION_INFO: Record<Faction, { label: string; emoji: string }> = {
-  nature: { label: '자연', emoji: '🌿' },
-  citizen: { label: '시민', emoji: '🙋' },
-  industry: { label: '산업', emoji: '🏢' },
+export const FACTION_INFO: Record<Faction, { label: string; emoji: string; desc: string }> = {
+  nature: { label: '자연', emoji: '🌿', desc: '동물·숲·바다' },
+  human: { label: '인간', emoji: '🙋', desc: '시민·노동자·기업' },
 }
 
-/** 지구 지도의 지역 */
-export type ZoneId = 'antarctic' | 'forest' | 'industrial' | 'coast' | 'farm' | 'city'
+/** 지구 풍경을 기후대별로 나눈 지역 (극지방 → 적도 순서) */
+export type ZoneId = 'polar' | 'subarctic' | 'rural' | 'city' | 'dry' | 'tropical'
+
+/** 판단 근거로 붙이는 실제 자료 한 줄 */
+export interface Source {
+  /** 학생이 읽을 한두 문장 (숫자는 출처에서 확인한 그대로) */
+  text: string
+  /** 기관·자료 이름, 연도 */
+  from: string
+  url: string
+}
 
 /** 등장 조건. 적힌 조건을 모두 만족해야 참 */
 export interface Cond {
@@ -82,6 +90,10 @@ export interface Card {
   speaker: Speaker
   /** 대표가 하는 말 */
   text: string
+  /** 민원서에 첨부되는 실제 자료 (지금 세계는 어떤지) */
+  evidence?: Source
+  /** 영향 분석서에 붙는 실제 사례 (비슷한 정책을 해 본 곳의 결과) */
+  example?: Source
   /** 조건에 따라 덧붙는 말 */
   extraText?: { if: Cond; text: string }[]
   /** 승인하면 시행되는 정책 이름 */

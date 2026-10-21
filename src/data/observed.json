@@ -1,0 +1,28 @@
+{
+  "co2": {
+    "value": 426.07,
+    "year": 2026,
+    "month": 9,
+    "from": "NOAA 마우나로아 관측소",
+    "url": "https://gml.noaa.gov/ccgg/trends/"
+  },
+  "seaIce": {
+    "value": 4.81,
+    "year": 2026,
+    "month": 9,
+    "first": {
+      "year": 1979,
+      "value": 7.05
+    },
+    "from": "NSIDC 해빙 지수",
+    "url": "https://nsidc.org/data/seaice_index"
+  },
+  "fetchedAt": "2026-10-21",
+  "temp": {
+    "value": 1.18,
+    "year": 2025,
+    "base": "1951~1980년 평균보다",
+    "from": "NASA GISTEMP",
+    "url": "https://data.giss.nasa.gov/gistemp/"
+  }
+}

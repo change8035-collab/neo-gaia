@@ -17,7 +17,7 @@ import type {
   Stats,
   StatKey,
 } from './types.ts'
-import { FACTIONS, FACTION_INFO, STAT_INFO, STAT_KEYS } from './types.ts'
+import { FACTIONS, STAT_INFO, STAT_KEYS } from './types.ts'
 
 export const TERM_TURNS = 15 // 결정 15번 = 임기 30년
 export const YEARS_PER_TURN = 2
@@ -35,7 +35,7 @@ export type Rng = () => number
 export function newGame(): GameState {
   return {
     stats: { earth: START_STAT, human: START_STAT, economy: START_STAT },
-    trust: { nature: 50, citizen: 50, industry: 50 },
+    trust: { nature: 50, human: 50 },
     consults: CONSULTS,
     flags: [],
     decisions: [],
@@ -137,21 +137,26 @@ export function consult(state: GameState): GameState {
   return { ...state, consults: Math.max(0, state.consults - 1) }
 }
 
-/** 신뢰에 따라 대표의 표정과 첫마디가 달라짐 */
-export function speakerMood(card: Card, state: GameState): { emoji: string; label: string; line?: string } {
-  if (!card.faction) return { emoji: '', label: '' }
-  const t = state.trust[card.faction]
-  const name = FACTION_INFO[card.faction].label
-  if (t <= 30) {
+/** 민심 수치를 말로: 불만 / 보통 / 신뢰 */
+export function trustWord(t: number): { label: string; tone: 'low' | 'mid' | 'high' } {
+  if (t <= 30) return { label: '불만', tone: 'low' }
+  if (t >= 75) return { label: '신뢰', tone: 'high' }
+  return { label: '보통', tone: 'mid' }
+}
+
+/** 민심에 따라 대표의 첫마디가 달라짐 */
+export function speakerMood(card: Card, state: GameState): { label: string; tone: 'low' | 'mid' | 'high'; line?: string } {
+  if (!card.faction) return { label: '', tone: 'mid' }
+  const word = trustWord(state.trust[card.faction])
+  if (word.tone === 'low') {
     const lines: Record<Faction, string> = {
       nature: '솔직히 이번에도 기대는 안 해요.',
-      citizen: '이번에도 우리를 숫자로만 보실 건가요?',
-      industry: '이번엔 좀 들어주시죠. 저희도 한계예요.',
+      human: '이번에도 우리를 숫자로만 보실 건가요?',
     }
-    return { emoji: '😠', label: `${name} 신뢰 낮음`, line: lines[card.faction] }
+    return { ...word, line: lines[card.faction] }
   }
-  if (t >= 75) return { emoji: '😊', label: `${name} 신뢰 높음`, line: '지난번엔 고마웠어요. 이번에도 믿고 왔어요.' }
-  return { emoji: '😐', label: `${name} 신뢰 보통` }
+  if (word.tone === 'high') return { ...word, line: '지난번엔 고마웠어요. 이번에도 믿고 왔어요.' }
+  return word
 }
 
 export interface ChoiceResult {

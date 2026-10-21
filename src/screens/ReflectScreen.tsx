@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { CARDS } from '../data/cards.ts'
+import observed from '../data/observed.json'
 import { LIVES } from '../data/lives.ts'
 import { loadCollection } from '../game/collection.ts'
 import { ENDING_IDS, endingId, getEnding, grade, managerType, yearsServed } from '../game/engine.ts'
@@ -15,6 +17,11 @@ interface Props {
 
 export default function ReflectScreen({ game, life, name, onRebornAgain, onRestart }: Props) {
   const [copied, setCopied] = useState(false)
+  const [tab, setTab] = useState<'book' | 'sources'>('book')
+  // 이번 판에 올라온 민원서들의 실제 자료 (판단 근거 출처 모음)
+  const sources = game.decisions
+    .map((d) => CARDS.find((c) => c.id === d.cardId))
+    .filter((c) => c && (c.evidence || c.example))
   const type = managerType(game)
   const ending = getEnding(endingId(game) ?? 'cracked', game)
   const g = grade(game)
@@ -68,15 +75,16 @@ export default function ReflectScreen({ game, life, name, onRebornAgain, onResta
             <h3>
               {life.life.emoji} {life.life.name}(으)로 산 나
             </h3>
-            <p className="hand notebook__outcome">
-              {life.outcome.emoji} {life.outcome.label}
-            </p>
+            <p className="hand notebook__outcome">{life.outcome.label}</p>
             <ul className="notebook__scenes">
-              {life.scenes.map((sc) => (
-                <li key={sc.title} className="hand">
-                  <b>{sc.score > 0 ? '🙂' : sc.score < 0 ? '😣' : '😐'}</b> {sc.text}
-                </li>
-              ))}
+              {life.scenes.map((sc) => {
+                const m = sc.score > 0 ? ['ok', '좋음'] : sc.score < 0 ? ['no', '힘듦'] : ['mid', '보통']
+                return (
+                  <li key={sc.title} className="hand">
+                    <i className={`mini-stamp ${m[0]}`}>{m[1]}</i> {sc.text}
+                  </li>
+                )
+              })}
             </ul>
             {powerLine && <p className="hand">{powerLine}</p>}
           </section>
@@ -93,6 +101,44 @@ export default function ReflectScreen({ game, life, name, onRebornAgain, onResta
       </article>
 
       <aside className="reflect__side">
+        <div className="tabs" role="tablist">
+          <button role="tab" aria-selected={tab === 'book'} className={tab === 'book' ? 'on' : ''} onClick={() => setTab('book')}>
+            도감
+          </button>
+          <button role="tab" aria-selected={tab === 'sources'} className={tab === 'sources' ? 'on' : ''} onClick={() => setTab('sources')}>
+            자료 출처 {sources.length}
+          </button>
+        </div>
+        {tab === 'sources' ? (
+          <section className="sources">
+            <b>이번 판 민원서에 붙은 실제 자료</b>
+            <ol>
+              <li>
+                <span>오늘의 실제 지구 (관측값, {observed.fetchedAt} 받음)</span>
+                {[observed.co2, observed.temp, observed.seaIce].map((o) => (
+                  <a key={o.from} href={o.url} target="_blank" rel="noreferrer">
+                    관측 · {o.from}
+                  </a>
+                ))}
+              </li>
+              {sources.map((c) => (
+                <li key={c!.id}>
+                  <span>{c!.policy}</span>
+                  {c!.evidence && (
+                    <a href={c!.evidence.url} target="_blank" rel="noreferrer">
+                      근거 · {c!.evidence.from}
+                    </a>
+                  )}
+                  {c!.example && (
+                    <a href={c!.example.url} target="_blank" rel="noreferrer">
+                      사례 · {c!.example.from}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : (
         <section className="stickerbook">
           <b>환생 도감</b>
           <div className="stickerbook__grid">
@@ -118,6 +164,7 @@ export default function ReflectScreen({ game, life, name, onRebornAgain, onResta
             })}
           </div>
         </section>
+        )}
 
         <div className="actions">
           <button className="btn btn--ink btn--wide" onClick={onRebornAgain}>

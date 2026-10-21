@@ -11,7 +11,7 @@ export const LIVES: Life[] = [
     emoji: '👷',
     name: '공업 도시 노동자의 아이',
     kind: 'human',
-    zone: 'industrial',
+    zone: 'city',
     intro: '당신은 강변 공업 도시의 노동자 가정에서 태어났습니다.',
     introGaia: '당신은 인류의 90%가 사라진 뒤, 텅 빈 공업 도시에서 태어났습니다.',
     scenes: [
@@ -51,18 +51,18 @@ export const LIVES: Life[] = [
   },
   {
     id: 'coast_kid',
-    emoji: '🏖️',
-    name: '해안 마을의 아이',
+    emoji: '🏝️',
+    name: '태평양 섬마을의 아이',
     kind: 'human',
-    zone: 'coast',
-    intro: '당신은 바닷가 작은 마을에서 태어났습니다.',
-    introGaia: '당신은 인류의 90%가 사라진 뒤, 바닷가 작은 마을에서 태어났습니다.',
+    zone: 'tropical',
+    intro: '당신은 태평양의 작은 산호섬 마을에서 태어났습니다.',
+    introGaia: '당신은 인류의 90%가 사라진 뒤, 태평양의 작은 산호섬에서 태어났습니다.',
     scenes: [
       {
         title: '어린 시절',
         variants: [
-          { if: { flags: ['gaia'] }, text: '마을에 아이는 당신 하나뿐이었습니다. 학교는 오래전에 문을 닫았습니다.', score: -1 },
-          { if: { flags: ['coast_flooded'] }, text: '바닷물이 골목까지 들어와서, 가족은 언덕 위 임시 주택으로 이사했습니다.', score: -2 },
+          { if: { flags: ['gaia'] }, text: '섬에 아이는 당신 하나뿐이었습니다. 학교는 오래전에 문을 닫았습니다.', score: -1 },
+          { if: { flags: ['coast_flooded'] }, text: '바닷물이 골목까지 들어와서, 가족은 섬에서 제일 높은 곳으로 집을 옮겼습니다.', score: -2 },
           { if: { flags: ['seawall'] }, text: '마을 앞에 높은 방파제가 있었습니다. 안전했지만, 바다는 벽 너머에서 소리로만 들렸습니다.', score: 0 },
           { if: { flags: ['fossil_limit'] }, text: '바닷물이 차오르는 속도가 느려져서, 할머니 집은 여전히 바닷가에 있었습니다.', score: 1 },
           { text: '여름마다 태풍이 조금씩 세졌습니다.', score: 0 },
@@ -72,19 +72,20 @@ export const LIVES: Life[] = [
         title: '학창 시절',
         variants: [
           { if: { flags: ['plastic_ban'] }, text: '바닷가 쓰레기 줍기 봉사 활동이 없어졌습니다. 주울 쓰레기가 거의 없었거든요.', score: 1 },
+          { if: { flags: ['palm_keep'] }, text: '이웃 큰 섬의 숲을 태워 기름야자 밭을 만들 때마다, 바람에 실려 온 연기 때문에 학교가 쉬었습니다.', score: -1 },
           { if: { flags: ['aircon_limit'] }, text: '교실 에어컨을 마음껏 틀 수 없어서, 여름이면 다들 부채질을 했습니다.', score: -1 },
           { if: { flags: ['less_meat'] }, text: '급식에 고기는 일주일에 두 번만 나왔습니다. 처음엔 투덜댔지만, 생선구이는 꽤 맛있었습니다.', score: 0 },
-          { text: '방과 후엔 바다에서 수영하며 평범한 학교생활을 했습니다.', score: 0 },
+          { text: '방과 후엔 산호초 바다에서 수영하며 평범한 학교생활을 했습니다.', score: 0 },
         ],
       },
       {
         title: '어른이 되어',
         variants: [
           { if: { flags: ['gaia'] }, text: '바다는 아주 맑아졌습니다. 하지만 함께 바다를 볼 사람이 거의 없었습니다.', score: -1 },
-          { if: { max: { earth: 30 } }, text: '결국 마을은 바닷물에 잠겨 지도에서 사라졌습니다.', score: -2 },
-          { if: { min: { earth: 60 } }, text: '어른이 된 당신은 다시 돌아온 바다거북을 지키는 일을 하게 되었습니다.', score: 1 },
-          { if: { flags: ['refugee_welcome'] }, text: '마을에 기후 난민 가족들이 이사 와서, 오랜만에 학교에 아이들 소리가 났습니다.', score: 1 },
-          { text: '고향을 떠나 도시에서 살게 되었지만, 바다 냄새가 가끔 그리웠습니다.', score: 0 },
+          { if: { max: { earth: 30 } }, text: '결국 섬은 바닷물에 잠겨 지도에서 사라졌습니다. 가족은 다른 나라로 떠났습니다.', score: -2 },
+          { if: { min: { earth: 60 } }, text: '어른이 된 당신은 다시 돌아온 바다거북과 산호를 지키는 일을 하게 되었습니다.', score: 1 },
+          { if: { flags: ['refugee_welcome'] }, text: '섬을 떠나야 했지만, 기후 난민을 받아 주는 나라가 있어서 새 동네에 자리를 잡았습니다.', score: 0 },
+          { text: '고향을 떠나 큰 도시에서 살게 되었지만, 바다 냄새가 가끔 그리웠습니다.', score: 0 },
         ],
       },
     ],
@@ -94,7 +95,7 @@ export const LIVES: Life[] = [
     emoji: '🧑‍🌾',
     name: '목장집 아이',
     kind: 'human',
-    zone: 'farm',
+    zone: 'rural',
     intro: '당신은 소를 키우는 목장집 아이로 태어났습니다.',
     introGaia: '당신은 인류의 90%가 사라진 뒤, 주인 잃은 목장 근처에서 태어났습니다.',
     scenes: [
@@ -134,7 +135,7 @@ export const LIVES: Life[] = [
     emoji: '🦌',
     name: '뒷산 숲의 사슴',
     kind: 'animal',
-    zone: 'forest',
+    zone: 'rural',
     intro: '당신은 도시 뒷산 숲의 사슴으로 태어났습니다.',
     introGaia: '당신은 사람이 거의 사라진 세상의 사슴으로 태어났습니다.',
     scenes: [
@@ -175,7 +176,7 @@ export const LIVES: Life[] = [
     emoji: '🐧',
     name: '남극의 펭귄',
     kind: 'animal',
-    zone: 'antarctic',
+    zone: 'polar',
     intro: '당신은 남극의 황제펭귄으로 태어났습니다.',
     introGaia: '당신은 사람이 거의 사라진 세상의 황제펭귄으로 태어났습니다.',
     scenes: [
@@ -213,7 +214,7 @@ export const LIVES: Life[] = [
     emoji: '🐟',
     name: '도시 강의 물고기',
     kind: 'animal',
-    zone: 'industrial',
+    zone: 'city',
     intro: '당신은 공업 도시를 흐르는 강의 물고기로 태어났습니다.',
     introGaia: '당신은 사람이 거의 사라진 세상의 강물고기로 태어났습니다.',
     scenes: [
@@ -284,6 +285,120 @@ export const LIVES: Life[] = [
           { if: { max: { earth: 30 } }, text: '여름마다 폭염이 이어져, 그늘을 찾아 하루 종일 헤맸습니다.', score: -2 },
           { if: { min: { earth: 60, human: 50 } }, text: '가로수가 늘고 사람들 표정도 밝아졌습니다. 살기 좋은 도시였습니다.', score: 1 },
           { text: '복잡하지만 정든 도시에서 나이를 먹었습니다.', score: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'reindeer',
+    emoji: '🦌',
+    name: '타이가 숲의 순록',
+    kind: 'animal',
+    zone: 'subarctic',
+    intro: '당신은 시베리아 타이가 숲의 순록으로 태어났습니다.',
+    introGaia: '당신은 사람이 거의 사라진 세상의 순록으로 태어났습니다.',
+    scenes: [
+      {
+        title: '어린 시절',
+        variants: [
+          { if: { flags: ['gaia'] }, text: '가스관도 벌목 트럭도 멈춘 숲은 끝없이 조용했습니다.', score: 1 },
+          { if: { flags: ['arctic_gas'] }, text: '태어난 곳 옆으로 가스관이 지나갔습니다. 엄마는 가스관을 피해 멀리 돌아가야 했습니다.', score: -1 },
+          { if: { flags: ['fossil_limit'] }, text: '겨울이 제대로 추웠습니다. 꽁꽁 언 땅 위로 무리를 따라 힘차게 걸었습니다.', score: 1 },
+          { text: '눈 덮인 침엽수림에서 태어났습니다.', score: 0 },
+        ],
+      },
+      {
+        title: '자라서',
+        variants: [
+          { if: { flags: ['fire_crew'] }, text: '여름에 산불이 났지만 진화대가 금방 불을 껐습니다. 겨울 먹이인 이끼밭이 무사했습니다.', score: 1 },
+          { if: { flags: ['fire_ignored'] }, text: '여름마다 산불이 이끼밭을 태워서, 겨울에 먹을 것을 찾아 한참을 헤맸습니다.', score: -2 },
+          { if: { flags: ['carbon_tax'] }, text: '겨울이 다시 길어져서, 얼어붙은 강을 건너 먼 풀밭까지 갈 수 있었습니다.', score: 1 },
+          { text: '계절마다 무리와 함께 먼 길을 이동하며 자랐습니다.', score: 0 },
+        ],
+      },
+      {
+        title: '다 자라서',
+        variants: [
+          { if: { flags: ['gaia'] }, text: '이미 데워진 땅은 쉽게 식지 않았습니다. 땅속 얼음은 한동안 계속 녹았습니다.', score: 0 },
+          { if: { max: { earth: 30 } }, text: '땅속 얼음이 녹아 땅이 곳곳에서 꺼졌습니다. 늪이 된 길을 건너다 다리를 다쳤습니다.', score: -2 },
+          { if: { min: { earth: 60 } }, text: '땅속 얼음이 단단하게 남아 있어서, 새끼들에게 익숙한 길을 물려줄 수 있었습니다.', score: 1 },
+          { text: '겨울은 점점 짧아졌지만, 아직은 버틸 만했습니다.', score: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'desert_kid',
+    emoji: '🐪',
+    name: '사막 마을의 아이',
+    kind: 'human',
+    zone: 'dry',
+    intro: '당신은 모래 언덕 옆 오아시스 마을에서 태어났습니다.',
+    introGaia: '당신은 인류의 90%가 사라진 뒤, 텅 빈 사막 마을에서 태어났습니다.',
+    scenes: [
+      {
+        title: '어린 시절',
+        variants: [
+          { if: { flags: ['gaia'] }, text: '마을에는 우물 하나와 몇 가족만 남아 있었습니다.', score: -1 },
+          { if: { flags: ['desert_spread'] }, text: '모래 언덕이 우물을 덮어서, 날마다 먼 마을까지 물을 길으러 걸었습니다.', score: -2 },
+          { if: { flags: ['green_wall'] }, text: '마을 둘레에 심은 나무가 자라서, 모래바람이 불어도 창문을 열 수 있었습니다.', score: 1 },
+          { text: '오아시스 우물가에서 낙타와 함께 자랐습니다.', score: 0 },
+        ],
+      },
+      {
+        title: '학창 시절',
+        variants: [
+          { if: { flags: ['refugee_reject'] }, text: '가뭄으로 이웃 가족들이 떠났지만, 국경이 막혀 천막에서 지낸다는 소식만 들려왔습니다.', score: -1 },
+          { if: { flags: ['refugee_welcome'] }, text: '먼저 떠난 이웃 가족이 새 나라에서 학교에 다닌다는 편지를 보내왔습니다.', score: 1 },
+          { if: { flags: ['oil_stop'] }, text: '석유 수출이 줄어 나라 살림이 어려워졌습니다. 대신 태양광 기술을 가르치는 학교가 생겼습니다.', score: 0 },
+          { if: { flags: ['oil_keep'] }, text: '석유를 판 돈으로 학교에 에어컨이 생겼습니다. 하지만 여름은 해마다 더 뜨거워졌습니다.', score: 0 },
+          { text: '한낮엔 너무 더워서 해가 지고 나서야 친구들과 공을 찼습니다.', score: 0 },
+        ],
+      },
+      {
+        title: '어른이 되어',
+        variants: [
+          { if: { flags: ['gaia'] }, text: '오아시스 물은 넉넉해졌습니다. 하지만 함께 물을 나눌 이웃이 거의 없었습니다.', score: -1 },
+          { if: { max: { earth: 30 } }, text: '한여름엔 낮에 밖에 나갈 수 없는 날이 이어졌습니다. 결국 고향을 떠났습니다.', score: -2 },
+          { if: { flags: ['green_wall'], min: { earth: 45 } }, text: '어른이 된 당신은 나무 장벽을 돌보는 일을 하며 고향에 남았습니다.', score: 1 },
+          { text: '물을 아껴 쓰며, 그럭저럭 고향을 지켰습니다.', score: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'orangutan',
+    emoji: '🦧',
+    name: '열대우림의 오랑우탄',
+    kind: 'animal',
+    zone: 'tropical',
+    intro: '당신은 보르네오섬 열대우림의 오랑우탄으로 태어났습니다.',
+    introGaia: '당신은 사람이 거의 사라진 세상의 오랑우탄으로 태어났습니다.',
+    scenes: [
+      {
+        title: '어린 시절',
+        variants: [
+          { if: { flags: ['gaia'] }, text: '숲을 베는 전기톱 소리가 멈춘 지 오래였습니다.', score: 1 },
+          { if: { flags: ['palm_keep'] }, text: '엄마와 살던 나무가 베어지고, 그 자리에 줄 맞춘 기름야자 밭이 들어섰습니다.', score: -2 },
+          { if: { flags: ['palm_limit'] }, text: '숲을 태우는 연기가 줄어서, 엄마 품에서 맑은 공기를 마시며 자랐습니다.', score: 1 },
+          { text: '높은 나무 위 둥지에서 엄마 품에 안겨 자랐습니다.', score: 0 },
+        ],
+      },
+      {
+        title: '자라서',
+        variants: [
+          { if: { flags: ['reserve_wide'] }, text: '보호 구역이 넓어져서, 나뭇가지를 타고 먼 숲까지 갈 수 있었습니다.', score: 1 },
+          { if: { flags: ['palm_keep'] }, text: '먹이를 찾아 농장에 들어갔다가 쫓겨난 날이 많았습니다.', score: -1 },
+          { text: '엄마에게 먹을 수 있는 열매와 나뭇잎을 하나하나 배웠습니다.', score: 0 },
+        ],
+      },
+      {
+        title: '다 자라서',
+        variants: [
+          { if: { flags: ['gaia'] }, text: '숲은 사람이 떠난 마을까지 번졌습니다. 당신은 텅 빈 지붕 위에서 낮잠을 잤습니다.', score: 1 },
+          { if: { max: { earth: 30 } }, text: '가뭄이 길어지자 숲에 불이 자주 났습니다. 숲이 해마다 줄었습니다.', score: -2 },
+          { if: { min: { earth: 60 } }, text: '숲이 이어져 있어서, 새끼에게 넓은 숲을 물려줄 수 있었습니다.', score: 1 },
+          { text: '작아진 숲에서 조용히 나이를 먹었습니다.', score: 0 },
         ],
       },
     ],
