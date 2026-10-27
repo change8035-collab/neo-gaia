@@ -17,9 +17,25 @@
 - 민원서마다 **실제 통계와 출처 링크**가 붙고(첨부 · 실제 자료), 도장 옆에는 **실제 세계 사례** 쪽지가 뜬다
 - 첫 화면의 '오늘의 실제 지구'는 빌드할 때 NOAA(이산화탄소)·NASA(기온)·NSIDC(북극 바다얼음)에서 받아 온 관측값이다
 
+## 수업 토론방 (서비스)
+
+반 전체가 같이 하고, 결과를 한 화면에 모아 토론하는 기능.
+
+1. **선생님**: https://neo-gaia.netlify.app/?teacher 에서 방 이름을 적고 '토론방 만들기'
+   → 6자리 참여 번호와 QR이 있는 상황판이 열림 (상황판 주소에는 열쇠가 들어 있으니 선생님만 보관)
+2. **학생**: QR이나 `neo-gaia.netlify.app/?room=번호` 로 들어오거나, 임명장 '소속' 칸에 번호를 적고 도장
+3. 학생이 도장을 찍을 때마다 상황판(4초마다 갱신)에 모임
+   - 민원별 우리 반 승인·반려 (의견이 갈린 순)
+   - 엔딩 분포
+   - 회고 일기 끝의 **'주인 / 손님' 도장과 한 줄 이유**
+   - 가장 갈린 민원으로 만든 토론 질문 + 그 민원의 실제 자료
+
+서버는 `netlify/functions/rooms.mjs` (Netlify Functions) 하나이고, 기록은 Netlify Blobs 저장소에 학생마다 따로 저장한다.
+GitHub Pages 예비 주소에는 서버가 없어서 토론방은 Netlify 주소에서만 된다.
+
 ## 배포
 
-- 게임 주소: https://neo-gaia.netlify.app (Netlify) — 고친 뒤 `npm run deploy` 한 줄이면 다시 올라감
+- 게임 주소: https://neo-gaia.netlify.app (Netlify) — 고친 뒤 `npm run deploy` 한 줄이면 다시 올라감 (`npm run deploy:test` 는 임시 주소로 먼저 시험)
 - 예비 주소: https://change8035-collab.github.io/neo-gaia/ (GitHub Pages) — `main` 에 올리면 자동 반영
 
 ## 실행
@@ -43,7 +59,9 @@ npm run sim        # 밸런스 시뮬레이션 (여러 플레이 성향으로 �
 | `src/data/observed.json` | 실제 관측값 (`scripts/fetch-observed.mjs` 가 받아 옴) |
 | `src/components/Panorama.tsx` | 모니터 속 지구 풍경 그림 (SVG). 결정에 따라 빙하·연기·바닷물이 바뀜 |
 | `src/game/sound.ts` | 도장 쾅, 종이 소리 같은 효과음 (파일 없이 합성) |
-| `src/screens/` | 임명장 → 결재 책상 → 임기 보고서 → 환생 캡슐·생애 기록부 → 회고 일기·자료 출처 |
+| `src/screens/` | 임명장 → 결재 책상 → 임기 보고서 → 환생 캡슐·생애 기록부 → 회고 일기·자료 출처, `TeacherScreen` 은 선생님 상황판 |
+| `src/game/room.ts` | 토론방 서버와 주고받는 함수 (방 만들기, 기록 저장, 상황판 불러오기) |
+| `netlify/functions/rooms.mjs` | 토론방 서버 |
 
 ## 카드 추가하는 법
 

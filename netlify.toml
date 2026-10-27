@@ -1,0 +1,4 @@
+# Netlify 설정: 화면 파일은 dist, 토론방 서버 함수는 netlify/functions
+[build]
+  publish = "dist"
+  functions = "netlify/functions"

@@ -5,18 +5,31 @@ import { LIVES } from '../data/lives.ts'
 import { loadCollection } from '../game/collection.ts'
 import { ENDING_IDS, endingId, getEnding, grade, managerType, yearsServed } from '../game/engine.ts'
 import type { GameState, LifeResult } from '../game/types.ts'
+import type { RoomSession } from '../game/room.ts'
+import { sfx } from '../game/sound.ts'
 import Stage from '../components/Stage.tsx'
 
 interface Props {
   game: GameState
   life: LifeResult
   name: string
+  room: RoomSession | null
+  /** 마지막 질문에 찍은 도장 */
+  vote: { pick: '주인' | '손님'; reason: string } | null
+  onVote: (vote: { pick: '주인' | '손님'; reason: string }) => void
   onRebornAgain: () => void
   onRestart: () => void
 }
 
-export default function ReflectScreen({ game, life, name, onRebornAgain, onRestart }: Props) {
+export default function ReflectScreen({ game, life, name, room, vote, onVote, onRebornAgain, onRestart }: Props) {
   const [copied, setCopied] = useState(false)
+  // 한 줄 이유는 다 쓰고 도장을 찍을 때 함께 보냄
+  const [reason, setReason] = useState(vote?.reason ?? '')
+
+  const pick = (choice: '주인' | '손님') => {
+    sfx.stamp()
+    onVote({ pick: choice, reason: reason.trim() })
+  }
   const [tab, setTab] = useState<'book' | 'sources'>('book')
   // 이번 판에 올라온 민원서들의 실제 자료 (판단 근거 출처 모음)
   const sources = game.decisions
@@ -97,6 +110,25 @@ export default function ReflectScreen({ game, life, name, onRebornAgain, onResta
         <div className="final-q">
           <p>당신은 지구를 관리했습니다.</p>
           <p className="final-q__big">그런데 지구의 주인이었을까요?</p>
+          {/* 모둠 주제 "인류는 지구의 주인인가, 손님인가?"에 내 답을 도장으로 */}
+          <div className="owner-vote">
+            <input
+              value={reason}
+              maxLength={60}
+              placeholder="한 줄 이유 (예: 펭귄 집을 우리가 마음대로 정했으니까)"
+              onChange={(e) => setReason(e.target.value)}
+            />
+            {(['주인', '손님'] as const).map((choice) => (
+              <button key={choice} className={vote?.pick === choice ? 'on' : ''} onClick={() => pick(choice)}>
+                {vote?.pick === choice ? `✓ ${choice}` : choice}
+              </button>
+            ))}
+          </div>
+          {vote && (
+            <p className="owner-vote__sent">
+              {room ? `토론방 ${room.code}에 '${vote.pick}'(으)로 냈어요. 이유를 고치고 다시 찍어도 돼요.` : `'${vote.pick}'에 도장을 찍었어요.`}
+            </p>
+          )}
         </div>
       </article>
 

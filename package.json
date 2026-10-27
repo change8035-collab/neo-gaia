@@ -10,14 +10,18 @@
     "preview": "vite preview",
     "sim": "node --experimental-strip-types scripts/simulate.ts",
     "check": "tsc --noEmit",
-    "deploy": "npm run build && npx netlify-cli deploy --prod --dir dist --site 4ad19525-868c-4b3b-9cea-c90103773500"
+    "deploy": "npm run build && npx netlify-cli deploy --prod --dir dist --functions netlify/functions --site 4ad19525-868c-4b3b-9cea-c90103773500",
+    "deploy:test": "npm run build && npx netlify-cli deploy --dir dist --functions netlify/functions --site 4ad19525-868c-4b3b-9cea-c90103773500"
   },
   "dependencies": {
+    "@netlify/blobs": "^11.1.6",
+    "qrcode": "^1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",

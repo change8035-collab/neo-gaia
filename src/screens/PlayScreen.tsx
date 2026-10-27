@@ -11,9 +11,12 @@ import { PHASE_INFO, TERM_TURNS, TERM_YEARS, YEARS_PER_TURN, choose, consult, en
 import { sfx } from '../game/sound.ts'
 import { FACTIONS, FACTION_INFO, STAT_INFO, STAT_KEYS } from '../game/types.ts'
 import type { Card, GameState, Reaction, Stats, ZoneId } from '../game/types.ts'
+import type { RoomSession } from '../game/room.ts'
 
 interface Props {
   game: GameState
+  /** 수업 토론방에 들어와 있으면 방 정보 */
+  room: RoomSession | null
   /** 개발용: 이 id 의 민원서부터 시작 */
   firstCard?: string
   onChange: (game: GameState) => void
@@ -37,7 +40,7 @@ function deltaText(d: Stats) {
     .join(' · ')
 }
 
-export default function PlayScreen({ game, firstCard, onChange, onEnd }: Props) {
+export default function PlayScreen({ game, room, firstCard, onChange, onEnd }: Props) {
   const [card, setCard] = useState<Card>(() => CARDS.find((c) => c.id === firstCard) ?? nextCard(game, CARDS, Math.random))
   const [docNo, setDocNo] = useState(1)
   const [stamped, setStamped] = useState<{ approved: boolean; label: string } | null>(null)
@@ -169,6 +172,7 @@ export default function PlayScreen({ game, firstCard, onChange, onEnd }: Props) 
               <span>관리 {year}년차 / {TERM_YEARS}</span>
               <span>처리 {game.decisions.length}건</span>
               <span>분석서 {game.consults}장</span>
+              {room && <span>토론방 {room.code}</span>}
             </>
           }
         />
