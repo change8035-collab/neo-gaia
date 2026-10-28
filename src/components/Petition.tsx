@@ -18,6 +18,8 @@ interface Props {
   onPeek: () => void
   approveLabel: string
   rejectLabel: string
+  /** 반 전체 투표 모드: 영향 분석서 버튼을 숨김 */
+  noAttach?: boolean
 }
 
 const TITLES: Record<Card['kind'], string> = {
@@ -77,7 +79,7 @@ function Typewriter({ text }: { text: string }) {
 }
 
 export default function Petition(props: Props) {
-  const { card, game, number, year, stamped, leaving, peeked, onPeek, approveLabel, rejectLabel } = props
+  const { card, game, number, year, stamped, leaving, peeked, onPeek, approveLabel, rejectLabel, noAttach } = props
   const mood = speakerMood(card, game)
   const lines = cardLines(card, game)
   const isGaia = card.kind === 'gaia'
@@ -152,7 +154,7 @@ export default function Petition(props: Props) {
         )}
       </div>
 
-      {!isGaia && card.kind !== 'finale' && (
+      {!isGaia && card.kind !== 'finale' && !noAttach && (
         // 도장을 찍은 뒤에도 자리는 남겨 둬서 서류 크기가 변하지 않게 함
         <button
           className="attach"

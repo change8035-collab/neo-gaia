@@ -117,6 +117,20 @@ export function nextCard(state: GameState, cards: Card[], rng: Rng): Card {
   return pick(rest, rng)
 }
 
+/** 도장에 적힌 말 (가이아의 선택·권한 회의는 따로) */
+export function stampLabels(card: Card): { approve: string; reject: string } {
+  if (card.kind === 'gaia') return { approve: '실행', reject: '거부' }
+  if (card.kind === 'finale') return { approve: '나누기', reject: '혼자 쥐기' }
+  return { approve: '승인', reject: '반려' }
+}
+
+/** 지구 −8 · 인간 +4 처럼 바뀐 지표를 짧게 */
+export function deltaText(d: Stats): string {
+  return STAT_KEYS.filter((k) => d[k] !== 0)
+    .map((k) => `${STAT_INFO[k].label} ${d[k] > 0 ? '+' : ''}${d[k]}`)
+    .join(' · ')
+}
+
 /** 카드 본문 + 조건에 맞는 덧붙임 말 */
 export function cardLines(card: Card, state: GameState): string[] {
   const extra = (card.extraText ?? []).filter((e) => check(e.if, state)).map((e) => e.text)

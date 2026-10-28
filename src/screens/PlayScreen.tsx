@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Gauges from '../components/Gauges.tsx'
+import Minsim from '../components/Minsim.tsx'
 import Monitor from '../components/Monitor.tsx'
 import MuteButton from '../components/MuteButton.tsx'
 import Petition from '../components/Petition.tsx'
@@ -7,9 +8,20 @@ import Stage from '../components/Stage.tsx'
 import StampFlight, { makeFlight, reducedMotion } from '../components/StampFlight.tsx'
 import type { Flight } from '../components/StampFlight.tsx'
 import { CARDS } from '../data/cards.ts'
-import { PHASE_INFO, TERM_TURNS, TERM_YEARS, YEARS_PER_TURN, choose, consult, endingId, nextCard, phaseOf, trustWord } from '../game/engine.ts'
+import {
+  PHASE_INFO,
+  TERM_TURNS,
+  TERM_YEARS,
+  YEARS_PER_TURN,
+  choose,
+  consult,
+  deltaText,
+  endingId,
+  nextCard,
+  phaseOf,
+  stampLabels,
+} from '../game/engine.ts'
 import { sfx } from '../game/sound.ts'
-import { FACTIONS, FACTION_INFO, STAT_INFO, STAT_KEYS } from '../game/types.ts'
 import type { Card, GameState, Reaction, Stats, ZoneId } from '../game/types.ts'
 import type { RoomSession } from '../game/room.ts'
 
@@ -26,19 +38,6 @@ interface Props {
 type Flash = { zone: ZoneId | 'all'; good: boolean; text: string; id: number }
 
 const LEDGER_ROWS = 9
-
-function labels(card: Card) {
-  if (card.kind === 'gaia') return { approve: '실행', reject: '거부' }
-  if (card.kind === 'finale') return { approve: '나누기', reject: '혼자 쥐기' }
-  return { approve: '승인', reject: '반려' }
-}
-
-/** 지구 −8 · 인간 +4 처럼 바뀐 지표를 짧게 */
-function deltaText(d: Stats) {
-  return STAT_KEYS.filter((k) => d[k] !== 0)
-    .map((k) => `${STAT_INFO[k].label} ${d[k] > 0 ? '+' : ''}${d[k]}`)
-    .join(' · ')
-}
 
 export default function PlayScreen({ game, room, firstCard, onChange, onEnd }: Props) {
   const [card, setCard] = useState<Card>(() => CARDS.find((c) => c.id === firstCard) ?? nextCard(game, CARDS, Math.random))
@@ -75,7 +74,7 @@ export default function PlayScreen({ game, room, firstCard, onChange, onEnd }: P
   const turn = game.decisions.length - (stamped ? 1 : 0)
   const year = Math.min(turn + 1, TERM_TURNS) * YEARS_PER_TURN
   const isGaia = card.kind === 'gaia'
-  const label = labels(card)
+  const label = stampLabels(card)
   const busy = !!stamped || !!flight || finished
 
   /** 도장이 종이에 닿는 순간: 실제 결정 적용 */
@@ -178,25 +177,7 @@ export default function PlayScreen({ game, room, firstCard, onChange, onEnd }: P
         />
         <aside className="desk__side">
           <Gauges stats={game.stats} deltas={deltas} preview={preview} />
-          <div className="minsim">
-            <b className="minsim__title">민심</b>
-            {FACTIONS.map((f) => {
-              const t = game.trust[f]
-              const word = trustWord(t)
-              return (
-                <div key={f} className={`minsim__row ${t <= 25 ? 'low' : ''}`}>
-                  <span className="minsim__who">
-                    <b>{FACTION_INFO[f].label}</b>
-                    <small>{FACTION_INFO[f].desc}</small>
-                  </span>
-                  <i>
-                    <s style={{ width: `${t}%` }} />
-                  </i>
-                  <em className={`mood mood--${word.tone}`}>{word.label}</em>
-                </div>
-              )
-            })}
-          </div>
+          <Minsim game={game} />
         </aside>
       </div>
 

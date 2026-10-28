@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { LIVES } from './data/lives.ts'
-import { endingId, grade, managerType, newGame, rebirth } from './game/engine.ts'
+import { newGame, rebirth } from './game/engine.ts'
 import { saveRecord } from './game/room.ts'
 import type { RoomSession } from './game/room.ts'
 import type { GameState, LifeResult } from './game/types.ts'
@@ -10,10 +10,11 @@ import EndingScreen from './screens/EndingScreen.tsx'
 import RebirthScreen from './screens/RebirthScreen.tsx'
 import ReflectScreen from './screens/ReflectScreen.tsx'
 import TeacherScreen from './screens/TeacherScreen.tsx'
+import ClassScreen from './screens/ClassScreen.tsx'
 
 // 화면 흐름: 임명장 → 결재 책상 → 임기 보고서 → 환생 캡슐 → 회고 일기
 // 선생님은 ?teacher=방번호&key=열쇠 로 상황판을 봄
-type Screen = 'title' | 'play' | 'ending' | 'rebirth' | 'reflect' | 'teacher'
+type Screen = 'title' | 'play' | 'class' | 'ending' | 'rebirth' | 'reflect' | 'teacher'
 
 const PARAMS = new URLSearchParams(location.search)
 // 학생이 받은 링크: ?room=123456
@@ -61,22 +62,19 @@ export default function App() {
     window.scrollTo(0, 0)
   }, [screen, life])
 
-  // 토론방에 있으면 결재할 때마다, 엔딩·환생·투표가 생길 때마다 내 기록을 서버에 저장
+  // 토론방 게임이 끝난 뒤: 다시 태어난 삶과 주인/손님 답을 서버에 저장 (선생님 화면에 뜸)
   useEffect(() => {
-    if (!room || screen === 'title') return
-    const finished = endingId(game)
+    if (!room || (screen !== 'rebirth' && screen !== 'reflect')) return
     saveRecord(room, {
       name,
-      decisions: game.decisions.map((d) => ({ c: d.cardId, a: d.approved })),
-      ending: finished,
-      grade: finished ? grade(game).mark : null,
-      type: finished ? managerType(game).name : null,
+      round: 0,
+      pick: null,
       life: life ? life.life.name : null,
       outcome: life ? life.outcome.label : null,
       vote: vote ? vote.pick : null,
       reason: vote ? vote.reason : '',
     })
-  }, [room, game, life, vote, name, screen])
+  }, [room, life, vote, name, screen])
 
   const start = (who: string, joined: RoomSession | null) => {
     setName(who)
@@ -85,8 +83,15 @@ export default function App() {
     setGame(newGame())
     setLife(null)
     setRound((r) => r + 1)
-    setScreen('play')
+    // 토론방 번호를 적었으면 반 전체 투표 게임, 아니면 혼자 하기
+    setScreen(joined ? 'class' : 'play')
   }
+
+  // 반 전체 게임이 끝나면 우리 반 지구로 임기 보고서부터
+  const classEnd = useCallback((shared: GameState) => {
+    setGame(shared)
+    setScreen('ending')
+  }, [])
 
   const reborn = () => {
     setLife(rebirth(game, LIVES, Math.random, life?.life.id))
@@ -97,6 +102,7 @@ export default function App() {
     <div className={`app app--${screen}`}>
       {screen === 'teacher' && <TeacherScreen />}
       {screen === 'title' && <TitleScreen onStart={start} roomCode={room?.code ?? ROOM_CODE} />}
+      {screen === 'class' && room && <ClassScreen room={room} name={name} onEnd={classEnd} />}
       {screen === 'play' && (
         <PlayScreen
           key={round}
