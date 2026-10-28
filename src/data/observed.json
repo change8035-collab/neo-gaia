@@ -17,7 +17,7 @@
     "from": "NSIDC 해빙 지수",
     "url": "https://nsidc.org/data/seaice_index"
   },
-  "fetchedAt": "2026-10-27",
+  "fetchedAt": "2026-10-28",
   "temp": {
     "value": 1.18,
     "year": 2025,

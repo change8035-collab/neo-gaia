@@ -1524,42 +1524,37 @@ input {
   margin: 0;
 }
 
-/* 임명장 '소속' 칸: 수업 토론방 번호 */
-.appoint__room {
+/* 임명장 '참여 번호' 칸: 성명처럼 크게, 숫자 6자리 */
+.appoint__code {
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
+
+.appoint__code input {
+  flex: 0 0 150px;
+  font-family: var(--f-title);
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: 0.25em;
+}
+
+.appoint__code small {
   flex: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.appoint__room input {
-  width: 250px;
-  border: none;
-  border-bottom: 1.5px dashed var(--ink-soft);
-  background: transparent;
-  font-family: var(--f-hand);
+  min-width: 0;
+  font-family: var(--f-body);
   font-weight: 500;
-  font-size: 14px;
-  color: var(--blue);
-  padding: 0 2px;
-  outline: none;
-}
-
-.appoint__room input::placeholder {
-  color: var(--paper-line);
-}
-
-.appoint__room span {
   font-size: 12.5px;
-  font-weight: 700;
+  color: var(--ink-soft);
 }
 
-.appoint__room .ok {
+.appoint__code small.ok {
   color: var(--blue);
+  font-weight: 800;
 }
 
-.appoint__room .no {
+.appoint__code small.no {
   color: var(--red);
+  font-weight: 800;
 }
 
 /* 첫 화면 왼쪽 아래: 선생님용 토론방 만들기 */
@@ -3669,7 +3664,7 @@ input {
     width: 100%;
   }
 
-  .appoint__room input {
-    width: 100%;
+  .appoint__code small {
+    flex-basis: 100%;
   }
 }

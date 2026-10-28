@@ -142,30 +142,33 @@ export default function TitleScreen({ onStart, roomCode }: Props) {
                 autoFocus
               />
             </label>
+            {/* 수업 토론방 참여 번호: 선생님이 알려 준 6자리, 혼자 하면 비워 둠 */}
+            <label className="appoint__name appoint__code">
+              <span>참여 번호</span>
+              <input
+                value={code}
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="000000"
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                onKeyDown={(e) => e.key === 'Enter' && accept()}
+              />
+              <small className={code.length === 6 ? (checking ? '' : roomOk ? 'ok' : 'no') : ''}>
+                {code.length === 6
+                  ? checking
+                    ? '방 찾는 중…'
+                    : roomOk
+                      ? `✓ ${found?.title}`
+                      : '없는 방이에요. 번호를 확인해 주세요'
+                  : '선생님이 알려 준 6자리 · 혼자 하면 비워 두기'}
+              </small>
+            </label>
             <p className="appoint__text">
               위 사람을 기후관리 시스템 <b>NEO GAIA</b>의
               <br />
               제1대 지구 관리자로 임명합니다.
             </p>
             <dl className="appoint__terms">
-              <div>
-                <dt>소속</dt>
-                <dd className="appoint__room">
-                  <input
-                    value={code}
-                    inputMode="numeric"
-                    maxLength={6}
-                    placeholder="수업 토론방 번호 (혼자 하면 비워 두기)"
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                    aria-label="수업 토론방 번호"
-                  />
-                  {code.length === 6 && (
-                    <span className={roomOk ? 'ok' : 'no'}>
-                      {checking ? '확인 중…' : roomOk ? `✓ ${found?.title}` : '없는 방이에요'}
-                    </span>
-                  )}
-                </dd>
-              </div>
               <div>
                 <dt>임기</dt>
                 <dd>{TERM_YEARS}년</dd>
